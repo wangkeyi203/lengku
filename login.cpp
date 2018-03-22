@@ -37,7 +37,7 @@ void Login::on_login_clicked()
     query.bindValue(":admin","root");
     if(!query.exec())
     {
-        QMessageBox::warning(this,tr("错误"),tr("错误"));
+        QMessageBox::warning(this,tr("错误"),tr("数据库查询错误"));
         return;
     }
     while(query.next())
@@ -50,7 +50,7 @@ void Login::on_login_clicked()
        }
        else
        {
-           this->ui->passwd->setText("");
+           this->ui->passwd->clear();
            QMessageBox::warning(this,tr("错误"),tr("密码错误"));
        }
     }
