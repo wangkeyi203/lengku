@@ -28,13 +28,15 @@ SOURCES += \
         main.cpp \
         login.cpp \
     admin.cpp \
-    list.cpp
+    list.cpp \
+    my_sqlite.cpp
 
 HEADERS += \
         login.h \
     admin.h \
     list.h \
-    config.h
+    config.h \
+    my_sqlite.h
 
 FORMS += \
         login.ui \
