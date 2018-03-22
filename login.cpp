@@ -9,8 +9,8 @@ Login::Login(QWidget *parent) :
 {
     ui->setupUi(this);
     db = QSqlDatabase::addDatabase("QSQLITE");
-
     db.setDatabaseName(DATABASE);
+    this->ui->passwd->setEchoMode(QLineEdit::Password);
 }
 
 Login::~Login()
@@ -26,15 +26,20 @@ void Login::on_login_clicked()
         QMessageBox::warning(this,tr("提示"),tr("密码不能为空！"));
         return;
     }
-    if(db.open())
+    if(!db.open())
     {
         QMessageBox::warning(this,tr("错误"),tr("数据库打开错误，检查数据库"));
     }
 
     QSqlQuery query;
+
     query.prepare("select * from admin where name=:admin");
     query.bindValue(":admin","root");
-    query.exec();
+    if(!query.exec())
+    {
+        QMessageBox::warning(this,tr("错误"),tr("错误"));
+        return;
+    }
     while(query.next())
     {
        if(query.value(2).toString() == (ui->passwd->text()))
@@ -43,8 +48,12 @@ void Login::on_login_clicked()
            Admin *AD = new Admin;
            AD->show();
        }
-       ui->passwd->text()=query.value(2).toString();
+       else
+       {
+           this->ui->passwd->setText("");
+           QMessageBox::warning(this,tr("错误"),tr("密码错误"));
+       }
     }
-    QMessageBox::warning(this,tr("错误"),tr("错误"));
+
 
 }

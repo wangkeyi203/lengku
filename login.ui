@@ -106,28 +106,6 @@
      </size>
     </property>
    </widget>
-   <widget class="QLineEdit" name="name">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>150</y>
-      <width>181</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>50</width>
-      <height>30</height>
-     </size>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -135,7 +113,7 @@
      <x>0</x>
      <y>0</y>
      <width>657</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
