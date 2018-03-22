@@ -33,7 +33,7 @@ void Login::on_login_clicked()
 
     QSqlQuery query;
     query.prepare("select * from admin where name=:admin");
-    query.bindValue(":admin",ui->name->text());
+    query.bindValue(":admin","root");
     query.exec();
     while(query.next())
     {
