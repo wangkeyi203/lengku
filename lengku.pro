@@ -7,6 +7,8 @@
 QT       += core gui \
             sql      \
             network
+CONFIG   -= app_bundle
+CONFIG   += C++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,16 +30,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         login.cpp \
-    admin.cpp \
-    list.cpp \
-    my_sqlite.cpp
+        admin.cpp \
+        list.cpp \
+        my_sqlite.cpp \
+        tcpserver.cpp \
+        tcpsocket.cpp \
+        threadhandle.cpp
+
 
 HEADERS += \
         login.h \
-    admin.h \
-    list.h \
-    config.h \
-    my_sqlite.h
+        admin.h \
+        list.h \
+        config.h \
+        my_sqlite.h \
+        tcpserver.h \
+        tcpsocket.h \
+        threadhandle.h
 
 FORMS += \
         login.ui \
