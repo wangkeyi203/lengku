@@ -1,5 +1,6 @@
 ﻿#include "tcpserver.h"
 #include "threadhandle.h"
+#include "tcpsocket.h"
 
 TcpServer::TcpServer(QObject *parent,int numConnections) :
     QTcpServer(parent)

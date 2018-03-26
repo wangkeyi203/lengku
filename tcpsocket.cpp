@@ -2,11 +2,16 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QHostAddress>
 #include <QDebug>
-
+#include "my_sqlite.h"
 TcpSocket::TcpSocket(qintptr socketDescriptor, QObject *parent) : //构造函数在主线程执行，lambda在子线程
     QTcpSocket(parent),socketID(socketDescriptor)
 {
     this->setSocketDescriptor(socketDescriptor);
+    qDebug() << socketDescriptor;
+    QString con = QString::number(socketDescriptor,10);
+    qDebug() << con;
+    qDebug() << this->socketID;
+    sqlite = new My_Sqlite(con);
     connect(this,&TcpSocket::readyRead,this,&TcpSocket::readData);
     dis = connect(this,&TcpSocket::disconnected,
         [&](){
@@ -16,6 +21,7 @@ TcpSocket::TcpSocket(qintptr socketDescriptor, QObject *parent) : //构造函数
         });
     connect(&watcher,&QFutureWatcher<QByteArray>::finished,this,&TcpSocket::startNext);
     connect(&watcher,&QFutureWatcher<QByteArray>::canceled,this,&TcpSocket::startNext);
+
     qDebug() << "new connect" ;
 }
 
@@ -50,9 +56,14 @@ void TcpSocket::disConTcp(int i)
 void TcpSocket::readData()
 {
 //    datas.append(this->readAll());
-    auto data  = handleData(this->readAll(),this->peerAddress().toString(),this->peerPort());
+    //auto data  = handleData(this->readAll(),this->peerAddress().toString(),this->peerPort());
+    auto data = this->readAll();
     this->write(data);
-    //qDebug() << data;
+    qDebug() << data;
+    data1 =data;
+    QString num = QString::number(this->socketID,10);
+    sqlite->test_add(data1,num);
+    //sqlite->test_add(data1,num);
 
 //    if (!watcher.isRunning())//放到异步线程中处理。
 //    {

@@ -1,7 +1,7 @@
 #include "login.h"
 #include <QApplication>
 #include "config.h"
-
+#include "tcpserver.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

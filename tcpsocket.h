@@ -5,8 +5,8 @@
 #include <QQueue>
 #include <QFutureWatcher>
 #include <QByteArray>
-
 #include <QTime>
+#include "my_sqlite.h"
 
 
 class TcpSocket : public QTcpSocket
@@ -16,6 +16,8 @@ public:
     explicit TcpSocket(qintptr socketDescriptor, QObject *parent = 0);
     ~TcpSocket();
     QByteArray handleData(QByteArray data,const QString & ip, qint16 port);//用来处理数据的函数
+    My_Sqlite *sqlite;
+    QString data1;
 
 signals:
     //void readData(const int,const QString &,const quint16,const QByteArray &);
