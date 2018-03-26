@@ -1,11 +1,12 @@
 #include "admin.h"
 #include "ui_admin.h"
 
-Admin::Admin(QWidget *parent) :
+Admin::Admin(QSqlDatabase db,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Admin)
 {
     ui->setupUi(this);
+    this->db = db;
 }
 
 Admin::~Admin()
@@ -17,6 +18,6 @@ Admin::~Admin()
 
 void Admin::on_show_list_clicked()
 {
-    list = new List;
+    list = new List(this->db,this);
     setCentralWidget(list);
 }

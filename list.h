@@ -13,14 +13,15 @@ class List : public QWidget
     Q_OBJECT
 
 public:
-    explicit List(QWidget *parent = 0);
+    explicit List(QSqlDatabase &db,QWidget *parent = 0);
     ~List();
 
 private:
     Ui::List *ui;
     QStandardItemModel *model;
-
-
+    QSqlDatabase db;
+    QSqlQuery query;
+    QSqlTableModel *tablemodel;
 };
 
 #endif // LIST_H

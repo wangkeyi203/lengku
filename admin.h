@@ -14,7 +14,7 @@ class Admin : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit Admin(QWidget *parent = 0);
+    explicit Admin(QSqlDatabase db, QWidget *parent = 0);
     ~Admin();
 
 private slots:
@@ -24,6 +24,7 @@ private slots:
 private:
     Ui::Admin *ui;
     List *list;
+    QSqlDatabase db;
 };
 
 #endif // ADMIN_H

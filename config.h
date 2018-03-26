@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QHash>
 #include <QTcpServer>
+#include <QSqlTableModel>
 
 #define GLOBAL_CODEC   "UTF-8"
 #ifndef Q_OS_WIN

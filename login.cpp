@@ -44,8 +44,9 @@ void Login::on_login_clicked()
     {
        if(query.value(2).toString() == (ui->passwd->text()))
        {
+           db.close();
            this->close();
-           Admin *AD = new Admin;
+           Admin *AD = new Admin(db,this);
            AD->show();
        }
        else

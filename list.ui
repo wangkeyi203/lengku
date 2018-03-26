@@ -7,21 +7,33 @@
     <x>0</x>
     <y>0</y>
     <width>1450</width>
-    <height>748</height>
+    <height>1018</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTableView" name="tableView">
+  <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>1061</width>
-     <height>631</height>
+     <x>30</x>
+     <y>30</y>
+     <width>1381</width>
+     <height>961</height>
     </rect>
    </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTableView" name="tableView"/>
+    </item>
+    <item>
+     <widget class="QPushButton" name="List_all">
+      <property name="text">
+       <string>显示所有</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
