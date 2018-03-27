@@ -62,7 +62,7 @@ void TcpSocket::readData()
     qDebug() << data;
     data1 =data;
     QString num = QString::number(this->socketID,10);
-    sqlite->test_add(data1,num);
+    sqlite->test_add(data1);
     //sqlite->test_add(data1,num);
 
 //    if (!watcher.isRunning())//放到异步线程中处理。

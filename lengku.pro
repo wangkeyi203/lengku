@@ -35,7 +35,8 @@ SOURCES += \
         my_sqlite.cpp \
         tcpserver.cpp \
         tcpsocket.cpp \
-        threadhandle.cpp
+        threadhandle.cpp \
+    worker_list.cpp
 
 
 HEADERS += \
@@ -46,11 +47,13 @@ HEADERS += \
         my_sqlite.h \
         tcpserver.h \
         tcpsocket.h \
-        threadhandle.h
+        threadhandle.h \
+    worker_list.h
 
 FORMS += \
         login.ui \
     admin.ui \
-    list.ui
+    list.ui \
+    worker_list.ui
 
 

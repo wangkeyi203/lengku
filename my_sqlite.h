@@ -10,11 +10,13 @@ public:
     QSqlQuery *query;
     QSqlDatabase db;
     QString id;
-    void initsql(QString con_num);
-    bool add_heave1();
-    bool add_heave2();
+    QString get_worker_name(QString card_num);
+    bool check_flag(QString worker_name);
+    bool set_flag(QString worker_name);
+    bool add_weight_1(QString &id,QString weight);//毛料重量加时间
+    bool add_weight_2(QString &id,QString weight);//成品重量加时间.id用来在list中检索
     bool add_date();
-    bool test_add(QString test,QString con_num);
+    bool test_add(QString test);
 };
 
 #endif // MY_SQLITE_H

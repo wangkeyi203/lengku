@@ -17,14 +17,7 @@ My_Sqlite::My_Sqlite(QString con_num)
 
 }
 
-void My_Sqlite::initsql(QString con_num)
-{
-
-
-
-}
-
-bool My_Sqlite::test_add(QString test,QString con_num)
+bool My_Sqlite::test_add(QString test)
 {
 
     query->exec("select max(id) from test");
