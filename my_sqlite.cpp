@@ -39,4 +39,7 @@ bool My_Sqlite::test_add(QString test)
         return true;
     }
 }
+bool My_Sqlite::add_weight_1(QString &id, QString weight)
+{
 
+}

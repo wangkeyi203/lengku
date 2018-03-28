@@ -9,7 +9,7 @@ public:
     explicit My_Sqlite(QString con_num);
     QSqlQuery *query;
     QSqlDatabase db;
-    QString id;
+    QString id; //list的id
     QString get_worker_name(QString card_num);
     bool check_flag(QString worker_name);
     bool set_flag(QString worker_name);

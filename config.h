@@ -25,11 +25,15 @@
  * id (int) name(char) passwd(char)
  *
  * worker
- * id (int) name(char) work_num(char) card1~card8(char)
+ * id (int) name(char) flag (int) work_num(char) card1~card8(char)
  *
  * list
  * id int,name varchar(30) not null,kind varchar(30),weight1 varchar(30),time1 varchar(30),
  * weight2 varchar(30),time2 varchar(30),percent varchar(30),date varchar(30)
+ *
+ * kind
+ * id int,name vchar ,price vchar
+ *
  */
 
 #endif // CONFIG_H
