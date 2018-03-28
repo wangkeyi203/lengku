@@ -19,7 +19,7 @@ My_Sqlite::My_Sqlite(QString con_num)
 
 bool My_Sqlite::test_add(QString test)
 {
-
+    QString id;
     query->exec("select max(id) from test");
     while(query->next())
     {
@@ -39,7 +39,85 @@ bool My_Sqlite::test_add(QString test)
         return true;
     }
 }
-bool My_Sqlite::add_weight_1(QString &id, QString weight)
+bool My_Sqlite::add_weight_1(QString worker_name,QString kind,QString weight)
 {
+    query->exec("select max(id) from list");
+    while(query->next())
+    {
+        int id = query->value(0).toInt()+1;
+    }
 
+    query->prepare("insert into list values (id=:list_id,name=:worker_name,kind=:list:kind,weight1=:list_weight1,time1=:list_time1)");
+
+}
+
+bool My_Sqlite::get_worker_name(QString card_num, QString &worker_name)
+{
+    query->prepare("select * from worker where card1 =:card or card2 =:card or card3 =:card or card4 =:card or card5 =:card or card6 =:card or card7 =:card");
+    query->bindValue(":card",card_num);
+    query->exec();
+    if (!query->isActive())
+    {
+        return false;
+    }
+    while(query->next())
+    {
+        worker_name = query->value(1).toString();
+    }
+    return true;
+}
+
+int My_Sqlite::check_flag(QString worker_name)
+{
+    query->prepare("select * from worker where name =:worker_name");
+    query->bindValue(":worker_name",worker_name);
+    query->exec();
+    if (!query->isActive())
+    {
+        return -1;
+    }
+    int flag_n;
+    while(query->next())
+    {
+        flag_n = query->value(2).toInt();
+    }
+    return flag_n;
+}
+
+bool My_Sqlite::set_flag(QString worker_name)
+{
+    QString flag;
+    query->prepare("select * from worker where name =:worker_name");
+    query->bindValue(":worker_name",worker_name);
+    query->exec();
+    if(!query->isActive())
+    {
+        return false;
+    }
+    while(query->next())
+    {
+        flag = query->value(2).toString(); //获取flag值
+    }
+    if(flag.toInt(0,10) ==1)
+    {
+        query->prepare("update worker set flag=:flag_n");
+        query->bindValue("flag_n",0);
+        query->exec();
+        if(!query->isActive())
+        {
+            return false;
+        }
+
+    }
+    else
+    {
+        query->prepare("update worker set flag=:flag_n");
+        query->bindValue("flag_n",1);
+        query->exec();
+        if(!query->isActive())
+        {
+            return false;
+        }
+    }
+    return true;
 }
