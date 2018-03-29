@@ -13,6 +13,7 @@ class TcpServer : public QTcpServer
     Q_OBJECT
 public:
     explicit TcpServer(QObject *parent = 0,int numConnections = 10000);
+    //一个时间类，用来防止多次刷写
     ~TcpServer();
 
     void setMaxPendingConnections(int numConnections);//重写设置最大连接数函数

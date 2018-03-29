@@ -5,6 +5,7 @@ My_Sqlite::My_Sqlite(QString con_num)
 {
     db = QSqlDatabase::addDatabase("QSQLITE",con_num);
     db.setDatabaseName("DATABASE");
+    write_time = new QString;
     query = new QSqlQuery(con_num);
     if (db.open())
     {
@@ -46,9 +47,24 @@ bool My_Sqlite::add_weight_1(QString worker_name,QString kind,QString weight)
     {
         int id = query->value(0).toInt()+1;
     }
+    write_time = time.currentDateTime().toString("yyyy.MM.dd hh:mm:ss");
+    //再将id写入worker表中
+    query->prepare("update into worker valude (list_id=:id)");
+    query->bindValue(":id",QString::number(id,10));
 
-    query->prepare("insert into list values (id=:list_id,name=:worker_name,kind=:list:kind,weight1=:list_weight1,time1=:list_time1)");
 
+    query->prepare("insert into list values (id=:list_id,name=:worker_name,kind=:list_kind,weight1=:list_weight1,time1=:list_time1)");
+    query->bindValue(":list_id",QString::number(id,10));
+    query->bindValue(":worker_name",worker_name);
+    query->bindValue(":list_kind",kind);
+    query->bindValue(":list_weight",weight);
+    query->bindValue(":list_time1",write_time);
+
+    if(!query->isActive())
+    {
+        return false;
+    }
+    return true;
 }
 
 bool My_Sqlite::get_worker_name(QString card_num, QString &worker_name)

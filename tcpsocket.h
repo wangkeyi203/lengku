@@ -6,6 +6,7 @@
 #include <QFutureWatcher>
 #include <QByteArray>
 #include <QTime>
+#include <QDateTime>
 #include "my_sqlite.h"
 
 

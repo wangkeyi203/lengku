@@ -12,6 +12,7 @@
 #include <QHash>
 #include <QTcpServer>
 #include <QSqlTableModel>
+#include <QDateTime>
 
 #define GLOBAL_CODEC   "UTF-8"
 #ifndef Q_OS_WIN
@@ -25,11 +26,11 @@
  * id (int) name(char) passwd(char)
  *
  * worker
- * id (int) name(char) flag (int) list_id int work_num(char) card1~card7(char)
+ * id (int) name(char) flag (int) lisd_id(int) card1~card7(vchar)
  *
  * list
- * id int,name varchar(30) not null,kind varchar(30),weight1 varchar(30),time1 varchar(30),
- * weight2 varchar(30),time2 varchar(30),percent varchar(30),date varchar(30)
+ * id int,name(vchar) not null,kind (vchar),weight1 (vchar),time1 (vchar),
+ * weight2 (vchar),time2 (vchar),percent (vchar),date (vchar)
  *
  * kind
  * id int,name vchar ,price vchar

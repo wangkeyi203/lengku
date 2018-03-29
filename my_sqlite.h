@@ -9,6 +9,8 @@ public:
     explicit My_Sqlite(QString con_num);
     QSqlQuery *query;
     QSqlDatabase db;
+    QString write_time;
+    QDateTime *time;
     //QString id; //list的id
     bool get_worker_name(QString card_num,QString &worker_name);
     int check_flag(QString worker_name);
