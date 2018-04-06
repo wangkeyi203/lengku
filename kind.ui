@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Worker_list</class>
- <widget class="QWidget" name="Worker_list">
+ <class>Kind</class>
+ <widget class="QWidget" name="Kind">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>879</width>
-    <height>447</height>
+    <width>706</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QTableView" name="tableView">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>50</x>
      <y>20</y>
-     <width>631</width>
-     <height>401</height>
+     <width>561</width>
+     <height>241</height>
     </rect>
    </property>
   </widget>

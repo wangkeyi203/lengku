@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "list.h"
 #include "worker_list.h"
+#include "list_date.h"
+#include "kind.h"
 
 namespace Ui {
 class Admin;
@@ -23,10 +25,16 @@ private slots:
 
     void on_worker_list_clicked();
 
+    void on_list_date_clicked();
+
+    void on_kind_clicked();
+
 private:
     Ui::Admin *ui;
     List *list;
+    List_date *list_date;
     Worker_list *worker_list;
+    Kind *kind;
     QSqlDatabase db;
 };
 

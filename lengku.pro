@@ -3,12 +3,14 @@
 # Project created by QtCreator 2018-03-20T20:19:22
 #
 #-------------------------------------------------
-
+QMAKE_CFLAGS += SQLITE_THREADSAFE=1
 QT       += core gui \
             sql      \
             network
+#QT += axcontainer
 CONFIG   -= app_bundle
 CONFIG   += C++11
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -36,7 +38,9 @@ SOURCES += \
         tcpserver.cpp \
         tcpsocket.cpp \
         threadhandle.cpp \
-    worker_list.cpp
+    worker_list.cpp \
+    list_date.cpp \
+    kind.cpp
 
 
 HEADERS += \
@@ -48,12 +52,16 @@ HEADERS += \
         tcpserver.h \
         tcpsocket.h \
         threadhandle.h \
-    worker_list.h
+    worker_list.h \
+    list_date.h \
+    kind.h
 
 FORMS += \
         login.ui \
     admin.ui \
     list.ui \
-    worker_list.ui
+    worker_list.ui \
+    list_date.ui \
+    kind.ui
 
 

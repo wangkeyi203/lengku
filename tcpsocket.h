@@ -18,6 +18,7 @@ public:
     ~TcpSocket();
     QByteArray handleData(QByteArray data,const QString & ip, qint16 port);//用来处理数据的函数
     My_Sqlite *sqlite;
+    QString con;
     QString data1;
     QString cardnum;//用来记录当前线程的卡的id，写入成功之后保存，防止二次刷卡
 

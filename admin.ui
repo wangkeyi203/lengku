@@ -23,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>1596</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -76,23 +76,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>总列表</string>
+      <string>详细列表</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>170</y>
-       <width>93</width>
-       <height>28</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>员工工号</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="worker_list">
+    <widget class="QPushButton" name="list_date">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -102,7 +89,33 @@
       </rect>
      </property>
      <property name="text">
+      <string>日列表</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="worker_list">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>50</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
       <string>员工信息</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="kind">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>110</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>种类设置</string>
      </property>
     </widget>
    </widget>

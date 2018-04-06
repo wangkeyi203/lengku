@@ -8,9 +8,9 @@ TcpSocket::TcpSocket(qintptr socketDescriptor, QObject *parent) : //构造函数
 {
     this->setSocketDescriptor(socketDescriptor);
     qDebug() << socketDescriptor;
-    QString con = QString::number(socketDescriptor,10);
-    qDebug() << con;
-    qDebug() << this->socketID;
+    con = QString::number(socketDescriptor,10);
+    //qDebug() << con;
+    //qDebug() << this->socketID;
     sqlite = new My_Sqlite(con);
     connect(this,&TcpSocket::readyRead,this,&TcpSocket::readData);
     dis = connect(this,&TcpSocket::disconnected,
@@ -60,10 +60,45 @@ void TcpSocket::readData()
     auto data = this->readAll();
     this->write(data);
     qDebug() << data;
+    QString card_we = data;
+    sqlite->open_database(con);
+
+    QStringList list=card_we.split(',');
+    QString weight= list[0];
+    float w=weight.toFloat();
+    w=w/1000;
+    weight =QString("%1").arg(w);
+
+    QString worker_name;
+    QString kind;
+    sqlite->get_kind(kind);
+    sqlite->get_worker_name(list[1],worker_name);
+    qDebug()<<worker_name;
+    if (sqlite->check_flag(worker_name) == 0)
+    {
+        //原料
+        sqlite->add_weight_1(worker_name,kind,weight);
+        sqlite->set_flag(worker_name,1);
+        sqlite->set_card(worker_name,list[1]);
+    }
+    else {
+        //半成品
+        if(sqlite->check_card(worker_name,list[1])==false)
+        {
+            //卡号对不上
+            sqlite->add_weight_1(worker_name,kind,weight);
+            sqlite->set_flag(worker_name,1);
+            sqlite->set_card(worker_name,list[1]);
+        }
+        else {
+            sqlite->add_weight_2(worker_name,weight);
+            sqlite->set_flag(worker_name,0);
+        }
+    }
+
+
     data1 =data;
     QString num = QString::number(this->socketID,10);
-    sqlite->test_add(data1);
-    //sqlite->test_add(data1,num);
 
 //    if (!watcher.isRunning())//放到异步线程中处理。
 //    {

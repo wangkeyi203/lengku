@@ -13,12 +13,18 @@
 #include <QTcpServer>
 #include <QSqlTableModel>
 #include <QDateTime>
+#include <QTableWidget>
+#include <QFileDialog>
+#include <QDesktopServices>
+#include <QMessageBox>
+#include <QTextEdit>
 
 #define GLOBAL_CODEC   "UTF-8"
 #ifndef Q_OS_WIN
 #define DATABASE       "/Users/wangkeyi/Desktop/Qt_project/lengku/lengku/data/data.db"
 #else
 #define DATABASE       "F:/project/lengku/lengku/data/data.db"
+#include <QAxObject>
 #endif
 
 /*数据库表
@@ -26,11 +32,15 @@
  * id (int) name(char) passwd(char)
  *
  * worker
- * id (int) name(char) flag (int) lisd_id(int) card1~card7(vchar)
+ * id (int) name(char) flag (int) lisdid(int) card1~card7(vchar)
+ *
+ * list_date
+ * id (int) name(vchar) weight1 (vchar) num1(vchar) weight2(vchar) num2(char) persent(vchar) date(vchar)
  *
  * list
  * id int,name(vchar) not null,kind (vchar),weight1 (vchar),time1 (vchar),
  * weight2 (vchar),time2 (vchar),percent (vchar),date (vchar)
+ *
  *
  * kind
  * id int,name vchar ,price vchar

@@ -10,6 +10,7 @@ Login::Login(QWidget *parent) :
     ui->setupUi(this);
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(DATABASE);
+    db.setConnectOptions("SQLITE_THREADSAFE=1");
     this->ui->passwd->setEchoMode(QLineEdit::Password);
 }
 
