@@ -16,6 +16,9 @@ public:
     explicit Kind(QSqlDatabase &db,QWidget *parent = 0);
     ~Kind();
 
+private slots:
+    void on_refresh_clicked();
+
 private:
     Ui::Kind *ui;
     QStandardItemModel *model;

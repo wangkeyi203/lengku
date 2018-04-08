@@ -166,8 +166,6 @@ bool My_Sqlite::add_weight_2(QString worker_name, QString weight)
     }
     weight2=weight.toFloat();
     persent=weight2/weight1;
-    qDebug()<<weight2;
-
 
     write_time = time.currentDateTime().toString("hh:mm:ss");
     write_date = time.currentDateTime().toString("yyyy.MM.dd");
@@ -178,7 +176,7 @@ bool My_Sqlite::add_weight_2(QString worker_name, QString weight)
     query->bindValue(":list_id",QString::number(id,10));
     query->bindValue(":write_date",write_date);
     query->exec();
-    qDebug()<<query->lastError().text();
+
     if(!query->isActive())
     {
         return false;

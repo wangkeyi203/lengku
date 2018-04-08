@@ -20,7 +20,7 @@ public:
     My_Sqlite *sqlite;
     QString con;
     QString data1;
-    QString cardnum;//用来记录当前线程的卡的id，写入成功之后保存，防止二次刷卡
+    QString card_last;//用来记录当前线程的卡的id，写入成功之后保存，防止二次刷卡
 
 signals:
     //void readData(const int,const QString &,const quint16,const QByteArray &);

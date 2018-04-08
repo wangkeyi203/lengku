@@ -7,10 +7,7 @@ TcpSocket::TcpSocket(qintptr socketDescriptor, QObject *parent) : //构造函数
     QTcpSocket(parent),socketID(socketDescriptor)
 {
     this->setSocketDescriptor(socketDescriptor);
-    qDebug() << socketDescriptor;
     con = QString::number(socketDescriptor,10);
-    //qDebug() << con;
-    //qDebug() << this->socketID;
     sqlite = new My_Sqlite(con);
     connect(this,&TcpSocket::readyRead,this,&TcpSocket::readData);
     dis = connect(this,&TcpSocket::disconnected,
@@ -55,25 +52,68 @@ void TcpSocket::disConTcp(int i)
 
 void TcpSocket::readData()
 {
-//    datas.append(this->readAll());
-    //auto data  = handleData(this->readAll(),this->peerAddress().toString(),this->peerPort());
     auto data = this->readAll();
     this->write(data);
     qDebug() << data;
     QString card_we = data;
+    QString flag;
     sqlite->open_database(con);
 
+    QStringList list=card_we.split(',');
+    flag=list[0];
+
+    QString weight= list[1];
+    float w=weight.toFloat();
+    w=w/1000;
+    weight = QString("%1").arg(w);
+    QString worker_name;
+    QString kind;
+    sqlite->get_kind(kind);
+    sqlite->get_worker_name(list[2],worker_name);
+
+    if("0" == flag)//毛料
+    {
+        sqlite->add_weight_1(worker_name,kind,weight);
+        sqlite->set_flag(worker_name,1);
+        sqlite->set_card(worker_name,list[2]);
+        card_last=list[2];
+        return;
+
+    }
+    else //半成品
+    {
+        if(sqlite->check_card(worker_name,list[2])==false)
+        {
+            //卡号对不上
+          //  sqlite->add_weight_1(worker_name,kind,weight);
+           // sqlite->set_flag(worker_name,1);
+           // sqlite->set_card(worker_name,list[2]);
+            //card_last= list[2];
+            return;
+        }
+        else {
+            sqlite->add_weight_2(worker_name,weight);
+            sqlite->set_flag(worker_name,0);
+            card_last = list[2];
+            return;
+        }
+
+    }
+
+    /*
     QStringList list=card_we.split(',');
     QString weight= list[0];
     float w=weight.toFloat();
     w=w/1000;
-    weight =QString("%1").arg(w);
+    weight = QString("%1").arg(w);
 
     QString worker_name;
     QString kind;
     sqlite->get_kind(kind);
     sqlite->get_worker_name(list[1],worker_name);
     qDebug()<<worker_name;
+
+
     if (sqlite->check_flag(worker_name) == 0)
     {
         //原料
@@ -94,7 +134,7 @@ void TcpSocket::readData()
             sqlite->add_weight_2(worker_name,weight);
             sqlite->set_flag(worker_name,0);
         }
-    }
+    }*/
 
 
     data1 =data;

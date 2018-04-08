@@ -18,6 +18,8 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QTextEdit>
+#include <QTcpServer>
+#include <QTcpSocket>
 
 #define GLOBAL_CODEC   "UTF-8"
 #ifndef Q_OS_WIN
