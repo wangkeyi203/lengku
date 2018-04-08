@@ -62,7 +62,7 @@ bool My_Sqlite::add_weight_1(QString worker_name,QString kind,QString weight)
     {
         return false;
     }
-    //query->prepare("insert into list values (id=:list_id,name=:worker_name,kind=:list_kind,weight1=:list_weight1,time1=:list_time1)");
+
     query->prepare("insert into list (id,name,kind,weight1,time1) values(:list_id,:worker_name,:list_kind,:list_weight1,:list_time1)");
     query->bindValue(":list_id",QString::number(id,10));
     query->bindValue(":worker_name",worker_name);

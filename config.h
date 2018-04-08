@@ -26,7 +26,6 @@
 #define DATABASE       "/Users/wangkeyi/Desktop/Qt_project/lengku/lengku/data/data.db"
 #else
 #define DATABASE       "F:/project/lengku/lengku/data/data.db"
-#include <QAxObject>
 #endif
 
 /*数据库表
