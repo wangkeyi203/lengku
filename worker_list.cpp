@@ -97,5 +97,23 @@ void Worker_list::on_add_worker_clicked()
 
 void Worker_list::on_tableView_clicked(const QModelIndex &index)
 {
-    ui->card_num->setText("11111111");
+    //ui->card_num->setText("11111111");
+    int row =ui->tableView->currentIndex().row();
+    qDebug() <<row;
+
+}
+
+void Worker_list::on_add_card_clicked()
+{
+    QList<QLineEdit *> card_list;
+    card_list <<ui->card_num_1<<ui->card_num_2<<ui->card_num_3<<ui->card_num_4;
+    for(int i=0;i<4;i++)
+    {
+        //qDebug()<< card_list[i]->text();
+        if(card_list[i]->text().isEmpty())
+        {
+            qDebug()<<i;
+            break;
+        }
+    }
 }

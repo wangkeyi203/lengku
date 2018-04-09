@@ -19,6 +19,10 @@ public:
 private slots:
     void on_refresh_clicked();
 
+    void on_add_kind_clicked();
+
+    void on_changekind_clicked();
+
 private:
     Ui::Kind *ui;
     QStandardItemModel *model;

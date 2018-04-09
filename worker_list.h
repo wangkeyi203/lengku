@@ -30,6 +30,8 @@ private slots:
 
     void on_tableView_clicked(const QModelIndex &index);
 
+    void on_add_card_clicked();
+
 private:
     Ui::Worker_list *ui;
     QSqlDatabase db;

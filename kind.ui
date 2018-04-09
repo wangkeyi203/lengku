@@ -49,7 +49,7 @@
     <string>当前种类</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="kind">
+  <widget class="QLineEdit" name="kind_name">
    <property name="geometry">
     <rect>
      <x>230</x>
@@ -72,7 +72,7 @@
     <string>名称</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="refresh_2">
+  <widget class="QPushButton" name="add_kind">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -85,7 +85,7 @@
     <string>添加种类</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="refresh_3">
+  <widget class="QPushButton" name="changekind">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -95,7 +95,17 @@
     </rect>
    </property>
    <property name="text">
-    <string>添加种类</string>
+    <string>选择种类</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="kind_price">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>350</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>
