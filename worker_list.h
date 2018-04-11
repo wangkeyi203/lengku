@@ -37,6 +37,7 @@ private:
     QSqlDatabase db;
     QSqlQuery query;
     QSqlTableModel *tablemodel;
+    int id_now;
 
 };
 

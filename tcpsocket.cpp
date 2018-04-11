@@ -18,7 +18,7 @@ TcpSocket::TcpSocket(qintptr socketDescriptor, QObject *parent) : //构造函数
         });
     connect(&watcher,&QFutureWatcher<QByteArray>::finished,this,&TcpSocket::startNext);
     connect(&watcher,&QFutureWatcher<QByteArray>::canceled,this,&TcpSocket::startNext);
-
+    last_time.start();
     qDebug() << "new connect" ;
 }
 
@@ -53,13 +53,27 @@ void TcpSocket::disConTcp(int i)
 void TcpSocket::readData()
 {
     auto data = this->readAll();
-    this->write(data);
-    qDebug() << data;
+    //this->write(data);
     QString card_we = data;
+    QByteArray bytedata = data;
     QString flag;
     sqlite->open_database(con);
-
+    qDebug()<<"auto data is "<<data;
+    qDebug()<<"byte data is "<<bytedata;
+    QByteArrayList datalist = bytedata.split(',');
+    qDebug()<<"di san duan is "<<datalist[2].toHex().data();
     QStringList list=card_we.split(',');
+    for(int i=0;i<3;i++)
+    {
+        if(list[i].isEmpty())
+        {
+            qDebug()<<"list"<<list[i];
+            this->write("n");
+            return;
+        }
+    }
+
+
     flag=list[0];
 
     QString weight= list[1];
@@ -69,35 +83,90 @@ void TcpSocket::readData()
     QString worker_name;
     QString kind;
     sqlite->get_kind(kind);
-    sqlite->get_worker_name(list[2],worker_name);
+    sqlite->get_worker_name(datalist[2].toHex().data(),worker_name);
+
+    if(worker_name.isEmpty())
+    {
+        this->write("n");
+        return;
+    }
 
     if("0" == flag)//毛料
     {
-        sqlite->add_weight_1(worker_name,kind,weight);
-        sqlite->set_flag(worker_name,1);
-        sqlite->set_card(worker_name,list[2]);
-        card_last=list[2];
-        return;
+        qDebug()<<last_worker<<worker_name;
+        if(last_worker == worker_name)
+        {
+            if(last_time.elapsed() < 60000)
+            {
+                qDebug()<<"小于一分钟";
+                this->write("n");
+                return;
+            }
+            qDebug()<<"大于一分钟";
+            sqlite->add_weight_1(worker_name,kind,weight);
+            sqlite->set_flag(worker_name,1);
+            sqlite->set_card(worker_name,list[2]);
+            card_last=list[2];
+            last_worker=worker_name;
+            last_time.restart();
+            this->write("y");
+            return;
+        }
+        else //换人了
+        {
+            sqlite->add_weight_1(worker_name,kind,weight);
+            sqlite->set_flag(worker_name,1);
+            sqlite->set_card(worker_name,list[2]);
+            card_last=list[2];
+            last_worker=worker_name;
+            last_time.restart();
+            this->write("y");
+            return;
+
+        }
+
 
     }
     else //半成品
     {
-        if(sqlite->check_card(worker_name,list[2])==false)
+        if(last_worker == worker_name)
         {
-            //卡号对不上
-          //  sqlite->add_weight_1(worker_name,kind,weight);
-           // sqlite->set_flag(worker_name,1);
-           // sqlite->set_card(worker_name,list[2]);
-            //card_last= list[2];
-            return;
+            if(last_time.elapsed() < 60000)
+            {
+                qDebug()<<"小于一分钟";
+                this->write("n");
+                return;
+            }
+            else
+            {
+                if(sqlite->check_card(worker_name,list[2])==false)
+                {
+                    //卡号对不上
+                  //  sqlite->add_weight_1(worker_name,kind,weight);
+                   // sqlite->set_flag(worker_name,1);
+                   // sqlite->set_card(worker_name,list[2]);
+                    //card_last= list[2];
+                    this->write("n");
+                    return;
+                }
+                else
+                {
+                    sqlite->add_weight_2(worker_name,weight);
+                    sqlite->set_flag(worker_name,0);
+                    card_last = list[2];
+                    this->write("y");
+                    return;
+                }
+            }
         }
-        else {
+        else
+        {
             sqlite->add_weight_2(worker_name,weight);
             sqlite->set_flag(worker_name,0);
             card_last = list[2];
+            this->write("y");
             return;
         }
-
     }
 
     /*
@@ -137,8 +206,8 @@ void TcpSocket::readData()
     }*/
 
 
-    data1 =data;
-    QString num = QString::number(this->socketID,10);
+    //data1 =data;
+   // QString num = QString::number(this->socketID,10);
 
 //    if (!watcher.isRunning())//放到异步线程中处理。
 //    {

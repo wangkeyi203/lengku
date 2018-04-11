@@ -17,7 +17,7 @@ Kind::Kind(QSqlDatabase &db,QWidget *parent) :
     ui->tableView->setModel(tablemodel);
 
     int id_now;
-    query.exec("select * from kind_now");
+    query.exec("select * from kind_now where id=1");
     while(query.next())
     {
         id_now  = query.value(1).toInt();
@@ -59,6 +59,11 @@ void Kind::on_refresh_clicked()
 
 void Kind::on_add_kind_clicked()
 {
+    if(ui->kind_name->text().isEmpty() ||ui->kind_price->text().isEmpty())
+    {
+        QMessageBox::warning(this,tr("提示"),tr("请填入种类和价格"));
+        return;
+    }
     int maxid;
     query.exec("select max(id) from kind");
     while (query.next())
@@ -89,6 +94,24 @@ void Kind::on_add_kind_clicked()
 
 void Kind::on_changekind_clicked()
 {
+    int row = ui->tableView->currentIndex().row();
+    int kind_id = ui->tableView->model()->index(row,0).data().toInt();
+    QString kind_name=ui->tableView->model()->index(row,1).data().toString();
+    if(kind_name.isEmpty())
+    {
+        QMessageBox::warning(this,tr("提示"),tr("请从表中选择一个种类"));
+        return;
+    }
+    query.prepare("update kind_now set kind=:kind_now where id=1");
+    query.bindValue(":kind_now",kind_id);
+    query.exec();
+    qDebug()<<"change kind "<<query.lastError();
+    if(!query.isActive())
+    {
+        QMessageBox::warning(this,tr("提示"),tr("更改种类错误"));
+        return;
+    }
+    ui->kind_now_2->setText(kind_name);
     //int change_id=ui->tableView->currentIndex();
 
     //query.exec("select * from ")

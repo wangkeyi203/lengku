@@ -214,7 +214,7 @@ bool My_Sqlite::add_weight_2(QString worker_name, QString weight)
 
 bool My_Sqlite::get_worker_name(QString card_num, QString &worker_name)
 {
-    query->prepare("select * from worker where card2 =:card or card3 =:card or card4 =:card or card5 =:card or card6 =:card or card7 =:card");
+    query->prepare("select * from worker where card2 =:card or card3 =:card or card4 =:card or card5 =:card or card6 =:card or card7 =:card or card8 =:card or card9 =:card or card10 =:card or card11 =:card or card12 =:card or card13 =:card or card14 =:card or card15 =:card or card16 =:card or card17 =:card or card18 =:card or card19 =:card or card20 =:card or card21 =:card");
     query->bindValue(":card",card_num);
     query->exec();
     if (!query->isActive())
