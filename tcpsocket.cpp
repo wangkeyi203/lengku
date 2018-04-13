@@ -83,7 +83,11 @@ void TcpSocket::readData()
     QString worker_name;
     QString kind;
     sqlite->get_kind(kind);
+    qDebug()<<"kind is "<<kind;
+    qDebug()<<"weight is "<<weight;
     sqlite->get_worker_name(datalist[2].toHex().data(),worker_name);
+    qDebug()<<"worker name is "<<worker_name;
+    qDebug()<<"flag is "<<flag;
 
     if(worker_name.isEmpty())
     {
@@ -91,7 +95,7 @@ void TcpSocket::readData()
         return;
     }
 
-    if("0" == flag)//毛料
+    if("1" == flag)//毛料
     {
         qDebug()<<last_worker<<worker_name;
         if(last_worker == worker_name)
@@ -105,7 +109,7 @@ void TcpSocket::readData()
             qDebug()<<"大于一分钟";
             sqlite->add_weight_1(worker_name,kind,weight);
             sqlite->set_flag(worker_name,1);
-            sqlite->set_card(worker_name,list[2]);
+            sqlite->set_card(worker_name,datalist[2].toHex().data());
             card_last=list[2];
             last_worker=worker_name;
             last_time.restart();
@@ -116,7 +120,7 @@ void TcpSocket::readData()
         {
             sqlite->add_weight_1(worker_name,kind,weight);
             sqlite->set_flag(worker_name,1);
-            sqlite->set_card(worker_name,list[2]);
+            sqlite->set_card(worker_name,datalist[2].toHex().data());
             card_last=list[2];
             last_worker=worker_name;
             last_time.restart();
@@ -139,7 +143,7 @@ void TcpSocket::readData()
             }
             else
             {
-                if(sqlite->check_card(worker_name,list[2])==false)
+                if(sqlite->check_card(worker_name,datalist[2].toHex().data())==false)
                 {
                     //卡号对不上
                   //  sqlite->add_weight_1(worker_name,kind,weight);
@@ -153,7 +157,8 @@ void TcpSocket::readData()
                 {
                     sqlite->add_weight_2(worker_name,weight);
                     sqlite->set_flag(worker_name,0);
-                    card_last = list[2];
+                    card_last = datalist[2].toHex().data();
+                    last_worker = worker_name;
                     this->write("y");
                     return;
                 }
@@ -163,7 +168,8 @@ void TcpSocket::readData()
         {
             sqlite->add_weight_2(worker_name,weight);
             sqlite->set_flag(worker_name,0);
-            card_last = list[2];
+            card_last = datalist[2].toHex().data();
+            last_worker=worker_name;
             this->write("y");
             return;
         }
