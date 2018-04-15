@@ -21,6 +21,7 @@ List_date::List_date(QSqlDatabase &db,QWidget *parent) :
     tablemodel->setHeaderData(5,Qt::Orientation::Horizontal,"数量");
     tablemodel->setHeaderData(6,Qt::Orientation::Horizontal,"出成");
     tablemodel->setHeaderData(7,Qt::Orientation::Horizontal,"日期");
+    tablemodel->setHeaderData(8,Qt::Orientation::Horizontal,"种类");
     ui->tableView->setModel(tablemodel);
 }
 

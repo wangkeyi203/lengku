@@ -14,8 +14,12 @@ class Kind : public QWidget
 
 public:
     explicit Kind(QSqlDatabase &db,QWidget *parent = 0);
+    QTcpServer *kind_server;
+    QTcpSocket *kind_socket;
     ~Kind();
-
+public slots:
+    void new_cardid_connect();
+    void read_cardid();
 private slots:
     void on_refresh_clicked();
 

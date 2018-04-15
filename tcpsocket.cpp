@@ -20,6 +20,8 @@ TcpSocket::TcpSocket(qintptr socketDescriptor, QObject *parent) : //构造函数
     connect(&watcher,&QFutureWatcher<QByteArray>::canceled,this,&TcpSocket::startNext);
     last_time.start();
     qDebug() << "new connect" ;
+    this_kind="未定义";
+    this_kindid=0;
 }
 
 TcpSocket::~TcpSocket()
@@ -31,8 +33,7 @@ void TcpSocket::sentData(const QByteArray &data, const int id)
 {
     if(id == socketID)
     {
-        write(data);
-        qDebug() << "test" ;
+        write(data) ;
     }
 }
 
@@ -53,6 +54,7 @@ void TcpSocket::disConTcp(int i)
 void TcpSocket::readData()
 {
     auto data = this->readAll();
+    QString send_data;
     //this->write(data);
     QString card_we = data;
     QByteArray bytedata = data;
@@ -63,15 +65,39 @@ void TcpSocket::readData()
     QByteArrayList datalist = bytedata.split(',');
     qDebug()<<"di san duan is "<<datalist[2].toHex().data();
     QStringList list=card_we.split(',');
+
+    send_data="n,";
+    send_data.append(QString::number(this_kindid,10));
+    send_data.append(",000");
     for(int i=0;i<3;i++)
     {
         if(list[i].isEmpty())
         {
             qDebug()<<"list"<<list[i];
-            this->write("n");
+            this->write(send_data.toLatin1());
+            send_data.clear();
             return;
         }
     }
+
+    QString kind;
+    int kindid;
+    //QString card_now=datalist[2].toHex().data();
+    QString card_now=datalist[2];
+    if(sqlite->search_from_kind(kind,kindid,card_now))
+    {
+        this_kind=kind;
+        this_kindid=kindid;
+        send_data="y,";
+        send_data.append(QString::number(this_kindid,10));
+        send_data.append(",000");
+        this->write(send_data.toLatin1());//
+        return;
+    }
+   /* if(this_kind.isEmpty())
+    {
+        this_kind = "测试";
+    }*/
 
 
     flag=list[0];
@@ -81,17 +107,21 @@ void TcpSocket::readData()
     w=w/1000;
     weight = QString("%1").arg(w);
     QString worker_name;
-    QString kind;
-    sqlite->get_kind(kind);
-    qDebug()<<"kind is "<<kind;
+    QString worker_id;
+    //sqlite->get_kind(kind);
+    qDebug()<<"kind is "<<this_kind;
     qDebug()<<"weight is "<<weight;
-    sqlite->get_worker_name(datalist[2].toHex().data(),worker_name);
+    sqlite->get_worker_name(card_now,worker_name,worker_id);
     qDebug()<<"worker name is "<<worker_name;
     qDebug()<<"flag is "<<flag;
 
     if(worker_name.isEmpty())
     {
-        this->write("n");
+        send_data="n,";
+        send_data.append(QString::number(this_kindid,10));
+        send_data.append(",000");
+        this->write(send_data.toLatin1());
+        send_data.clear();
         return;
     }
 
@@ -103,28 +133,43 @@ void TcpSocket::readData()
             if(last_time.elapsed() < 60000)
             {
                 qDebug()<<"小于一分钟";
-                this->write("n");
+                send_data="n,";
+                send_data.append(QString::number(this_kindid,10));
+                send_data.append(",");
+                send_data.append(worker_id);
+                this->write(send_data.toLatin1());
+                send_data.clear();
                 return;
             }
             qDebug()<<"大于一分钟";
-            sqlite->add_weight_1(worker_name,kind,weight);
+            sqlite->add_weight_1(worker_name,this_kind,weight);
             sqlite->set_flag(worker_name,1);
-            sqlite->set_card(worker_name,datalist[2].toHex().data());
-            card_last=list[2];
+            sqlite->set_card(worker_name,card_now);
+            card_last=card_now;
             last_worker=worker_name;
             last_time.restart();
-            this->write("y");
+            send_data="y,";
+            send_data.append(QString::number(this_kindid,10));
+            send_data.append(",");
+            send_data.append(worker_id);
+            this->write(send_data.toLatin1());
+            send_data.clear();
             return;
         }
         else //换人了
         {
-            sqlite->add_weight_1(worker_name,kind,weight);
+            sqlite->add_weight_1(worker_name,this_kind,weight);
             sqlite->set_flag(worker_name,1);
-            sqlite->set_card(worker_name,datalist[2].toHex().data());
-            card_last=list[2];
+            sqlite->set_card(worker_name,card_now);
+            card_last=card_now;
             last_worker=worker_name;
             last_time.restart();
-            this->write("y");
+            send_data="y,";
+            send_data.append(QString::number(this_kindid,10));
+            send_data.append(",");
+            send_data.append(worker_id);
+            this->write(send_data.toLatin1());
+            send_data.clear();
             return;
 
         }
@@ -138,28 +183,43 @@ void TcpSocket::readData()
             if(last_time.elapsed() < 60000)
             {
                 qDebug()<<"小于一分钟";
-                this->write("n");
+                send_data="n,";
+                send_data.append(QString::number(this_kindid,10));
+                send_data.append(",");
+                send_data.append(worker_id);
+                this->write(send_data.toLatin1());
+                send_data.clear();
                 return;
             }
             else
             {
-                if(sqlite->check_card(worker_name,datalist[2].toHex().data())==false)
+                if(sqlite->check_card(worker_name,card_now)==false)
                 {
                     //卡号对不上
                   //  sqlite->add_weight_1(worker_name,kind,weight);
                    // sqlite->set_flag(worker_name,1);
                    // sqlite->set_card(worker_name,list[2]);
                     //card_last= list[2];
-                    this->write("n");
+                    send_data="n,";
+                    send_data.append(QString::number(this_kindid,10));
+                    send_data.append(",");
+                    send_data.append(worker_id);
+                    this->write(send_data.toLatin1());
+                    send_data.clear();
                     return;
                 }
                 else
                 {
                     sqlite->add_weight_2(worker_name,weight);
                     sqlite->set_flag(worker_name,0);
-                    card_last = datalist[2].toHex().data();
+                    card_last = card_now;
                     last_worker = worker_name;
-                    this->write("y");
+                    send_data="y,";
+                    send_data.append(QString::number(this_kindid,10));
+                    send_data.append(",");
+                    send_data.append(worker_id);
+                    this->write(send_data.toLatin1());
+                    send_data.clear();
                     return;
                 }
             }
@@ -168,9 +228,14 @@ void TcpSocket::readData()
         {
             sqlite->add_weight_2(worker_name,weight);
             sqlite->set_flag(worker_name,0);
-            card_last = datalist[2].toHex().data();
+            card_last = card_now;
             last_worker=worker_name;
-            this->write("y");
+            send_data="y,";
+            send_data.append(QString::number(this_kindid,10));
+            send_data.append(",");
+            send_data.append(worker_id);
+            this->write(send_data.toLatin1());
+            send_data.clear();
             return;
         }
     }

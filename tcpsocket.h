@@ -22,7 +22,10 @@ public:
     QString data1;
     QString card_last;//用来记录当前线程的卡的id，写入成功之后保存，防止二次刷卡
     QString last_worker;//纪录上一次刷卡的工人
+    QString this_kind;//当前连接线程的种类
+    int this_kindid;
     QTime last_time;
+
 
 signals:
     //void readData(const int,const QString &,const quint16,const QByteArray &);

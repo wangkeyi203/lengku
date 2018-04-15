@@ -14,6 +14,7 @@ Kind::Kind(QSqlDatabase &db,QWidget *parent) :
     tablemodel->setHeaderData(0,Qt::Orientation::Horizontal,"编号");
     tablemodel->setHeaderData(1,Qt::Orientation::Horizontal,"种类");
     tablemodel->setHeaderData(2,Qt::Orientation::Horizontal,"价格");
+    tablemodel->setHeaderData(3,Qt::Orientation::Horizontal,"卡号");
     ui->tableView->setModel(tablemodel);
 
     int id_now;
@@ -29,6 +30,10 @@ Kind::Kind(QSqlDatabase &db,QWidget *parent) :
     {
         ui->kind_now_2->setText(query.value(1).toString());
     }
+    kind_server = new QTcpServer(this);
+    kind_socket = new QTcpSocket(this);
+    kind_server->listen(QHostAddress::Any,6667);
+    connect(kind_server,SIGNAL(newConnection()),this,SLOT(new_cardid_connect()));
 
 }
 
@@ -59,9 +64,9 @@ void Kind::on_refresh_clicked()
 
 void Kind::on_add_kind_clicked()
 {
-    if(ui->kind_name->text().isEmpty() ||ui->kind_price->text().isEmpty())
+    if(ui->kind_name->text().isEmpty() || ui->kind_price->text().isEmpty() || ui->kind_card->text().isEmpty())
     {
-        QMessageBox::warning(this,tr("提示"),tr("请填入种类和价格"));
+        QMessageBox::warning(this,tr("提示"),tr("请填入种类和价格和卡号"));
         return;
     }
     int maxid;
@@ -71,10 +76,11 @@ void Kind::on_add_kind_clicked()
         maxid = query.value(0).toInt()+1;
     }
     qDebug()<<maxid;
-    query.prepare("insert into kind (id,name,price) values (:kind_id,:kind_name,:kind_price)");
+    query.prepare("insert into kind (id,name,price,cardnum) values (:kind_id,:kind_name,:kind_price,:card_num)");
     query.bindValue(":kind_id",maxid);
     query.bindValue(":kind_name",ui->kind_name->text());
     query.bindValue(":kind_price",ui->kind_price->text());
+    query.bindValue(":card_num",ui->kind_card->text());
     query.exec();
     int id_now;
     query.exec("select * from kind_now");
@@ -115,4 +121,46 @@ void Kind::on_changekind_clicked()
     //int change_id=ui->tableView->currentIndex();
 
     //query.exec("select * from ")
+}
+void Kind::new_cardid_connect()
+{
+    qDebug()<<"new list connect";
+    kind_socket=kind_server->nextPendingConnection();
+    connect(kind_socket,SIGNAL(readyRead()),this,SLOT(read_cardid()));
+    connect(kind_socket,SIGNAL(disconnected()),kind_socket,SLOT(deleteLater()));
+}
+
+void Kind::read_cardid()
+{
+    QString cardid;
+    QString test_empty ;
+    QByteArray data;
+    data = kind_socket->readAll();
+    //cardid = data.toStdString();
+    qDebug()<<"bytedata is " <<data;
+    cardid = data.toHex().data();
+    qDebug()<<"cardid is "<<cardid;
+
+
+    //先从worker中查找是否有当前卡
+
+    query.prepare("select * from kind where cardnum=:card");
+    query.bindValue(":card",cardid);
+    query.exec();
+    while(query.next())
+    {
+        test_empty = query.value(1).toString();
+    }
+    if(!test_empty.isEmpty())
+    {
+        qDebug()<<"youka";
+        QMessageBox::warning(this,tr("错误"),tr("该卡已经添加进数据库中"));
+        return;
+    }
+    kind_socket->write("y,01,12");
+
+    ui->kind_card->setText(cardid);
+    //update
+
+
 }

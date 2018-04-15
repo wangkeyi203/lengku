@@ -33,6 +33,30 @@ bool My_Sqlite::close_database(QString con_num)
     QSqlDatabase::removeDatabase(con_num);
     return true;
 }
+
+bool My_Sqlite::search_from_kind(QString &kind, int &kindid, QString cardid)
+{
+    query->prepare("select * from kind where cardnum=:card");
+    query->bindValue(":card",cardid);
+    query->exec();
+    if(!query->isActive())
+    {
+        return false;
+    }
+    while (query->next())
+    {
+        kindid=query->value(0).toInt();
+        kind=query->value(1).toString();
+    }
+    if(kind.isEmpty())
+    {
+        return false;
+    }
+    else {
+       return true;
+    }
+}
+
 bool My_Sqlite::test_add(QString test)
 {
     QString test2 = "黄花";
@@ -52,12 +76,14 @@ bool My_Sqlite::add_weight_1(QString worker_name,QString kind,QString weight)
     {
         id = query->value(0).toInt()+1;
     }
+    qDebug()<<"mysqlite 79 id "<<id;
     write_time = time.currentDateTime().toString("hh:mm:ss");
     //再将id写入worker表中,用来第二次写入的时候查询
     query->prepare("update worker set listid=:id where name=:worker_name");
     query->bindValue(":id",QString::number(id,10));
     query->bindValue(":worker_name",worker_name);
     query->exec();
+    qDebug()<<"mysqllite85" <<query->lastError();
     if(!query->isActive())
     {
         return false;
@@ -70,6 +96,7 @@ bool My_Sqlite::add_weight_1(QString worker_name,QString kind,QString weight)
     query->bindValue(":list_weight1",weight);
     query->bindValue(":list_time1",write_time);
     query->exec();
+    qDebug()<<"mysqllite98" <<query->lastError();
     if(!query->isActive())
     {
         return false;
@@ -79,10 +106,12 @@ bool My_Sqlite::add_weight_1(QString worker_name,QString kind,QString weight)
     float list_weight=weight.toFloat();
     int num1=0;
     QString write_date=time.currentDateTime().toString("yyyy.MM.dd");
-    query->prepare("select * from list_date where name=:worker_name and date=:write_date");
+    query->prepare("select * from list_date where name=:worker_name and date=:write_date and kind=:kind_now");
     query->bindValue(":worker_name",worker_name);
     query->bindValue(":write_date",write_date);
+    query->bindValue(":kind_now",kind);
     query->exec();
+    qDebug()<<"mysqllite113" <<query->lastError();
     if(!query->isActive())
     {
         return false;
@@ -103,13 +132,19 @@ bool My_Sqlite::add_weight_1(QString worker_name,QString kind,QString weight)
         {
             write_date_id = query->value(0).toInt()+1;
         }
-        query->prepare("insert into list_date (id,name,num1,num2,date) values (:list_id,:worker_name,:list_num1,:list_num2,:list_date)");
+        query->prepare("insert into list_date (id,name,num1,num2,date,kind) values (:list_id,:worker_name,:list_num1,:list_num2,:list_date,:kind_now)");
         query->bindValue(":list_id",write_date_id);
         query->bindValue(":worker_name",worker_name);
         query->bindValue(":list_num1",0);
         query->bindValue(":list_num2",0);
         query->bindValue(":list_date",write_date);
+        query->bindValue(":kind_now",kind);
         query->exec();
+        qDebug()<<"mysqllite142" <<query->lastError();
+        if(!query->isActive())
+        {
+            return false;
+        }
         qDebug()<<query->lastError();
     }
 
@@ -130,8 +165,10 @@ bool My_Sqlite::add_weight_1(QString worker_name,QString kind,QString weight)
     query->bindValue(":list_num",num1);
     query->bindValue(":list_id",write_date_id);
     query->exec();
+    qDebug()<<"mysqllite168" <<query->lastError();
 
     return true;
+
 }
 
 bool My_Sqlite::add_weight_2(QString worker_name, QString weight)
@@ -160,9 +197,11 @@ bool My_Sqlite::add_weight_2(QString worker_name, QString weight)
     {
         return false;
     }
+    QString kind2;
     while (query->next())
     {
         weight1=query->value(3).toFloat();
+        kind2 = query->value(2).toString();
     }
     weight2=weight.toFloat();
     persent=weight2/weight1;
@@ -185,9 +224,10 @@ bool My_Sqlite::add_weight_2(QString worker_name, QString weight)
 
     QString write_date=time.currentDateTime().toString("yyyy.MM.dd");
     weight2=weight.toFloat();
-    query->prepare("select * from list_date where name=:worker_name and date=:write_date");
+    query->prepare("select * from list_date where name=:worker_name and date=:write_date and kind=:kind2");
     query->bindValue(":worker_name",worker_name);
     query->bindValue(":write_date",write_date);
+    query->bindValue(":kind2",kind2);
     query->exec();
     if(!query->isActive())
     {
@@ -212,7 +252,7 @@ bool My_Sqlite::add_weight_2(QString worker_name, QString weight)
     return true;
 }
 
-bool My_Sqlite::get_worker_name(QString card_num, QString &worker_name)
+bool My_Sqlite::get_worker_name(QString card_num, QString &worker_name,QString &worker_id)
 {
     query->prepare("select * from worker where card2 =:card or card3 =:card or card4 =:card or card5 =:card or card6 =:card or card7 =:card or card8 =:card or card9 =:card or card10 =:card or card11 =:card or card12 =:card or card13 =:card or card14 =:card or card15 =:card or card16 =:card or card17 =:card or card18 =:card or card19 =:card or card20 =:card or card21 =:card");
     query->bindValue(":card",card_num);
@@ -224,6 +264,7 @@ bool My_Sqlite::get_worker_name(QString card_num, QString &worker_name)
     }
     while(query->next())
     {
+        worker_id = query->value(0).toString();
         worker_name = query->value(1).toString();
     }
     return true;

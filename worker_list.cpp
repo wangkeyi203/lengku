@@ -39,7 +39,7 @@ Worker_list::Worker_list(QSqlDatabase &db,QWidget *parent) :
     ui->tableView->setModel(tablemodel);
     list_server = new QTcpServer(this);
     list_socket = new QTcpSocket(this);
-    list_server->listen(QHostAddress::Any,6667);
+    list_server->listen(QHostAddress::Any,6668);
     connect(list_server,SIGNAL(newConnection()),this,SLOT(new_cardid_connect()));
 
 }
