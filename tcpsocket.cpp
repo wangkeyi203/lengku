@@ -82,8 +82,8 @@ void TcpSocket::readData()
 
     QString kind;
     int kindid;
-    //QString card_now=datalist[2].toHex().data();
-    QString card_now=datalist[2];
+    QString card_now=datalist[2].toHex().data();
+    //QString card_now=datalist[2];
     if(sqlite->search_from_kind(kind,kindid,card_now))
     {
         this_kind=kind;
@@ -104,7 +104,7 @@ void TcpSocket::readData()
 
     QString weight= list[1];
     float w=weight.toFloat();
-    w=w/1000;
+    w=w/100;
     weight = QString("%1").arg(w);
     QString worker_name;
     QString worker_id;

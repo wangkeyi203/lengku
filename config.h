@@ -25,7 +25,7 @@
 #ifndef Q_OS_WIN
 #define DATABASE       "/Users/wangkeyi/Desktop/Qt_project/lengku/lengku/data/data.db"
 #else
-#define DATABASE       "F:/project/lengku/lengku/data/data.db"
+#define DATABASE       "D:/lengku/data.db"
 #endif
 
 /*数据库表
