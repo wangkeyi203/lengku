@@ -27,6 +27,8 @@ private slots:
 
     void on_changekind_clicked();
 
+    void on_tableView_clicked(const QModelIndex &index);
+
 private:
     Ui::Kind *ui;
     QStandardItemModel *model;

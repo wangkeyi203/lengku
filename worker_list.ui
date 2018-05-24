@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>Worker_list</class>
  <widget class="QWidget" name="Worker_list">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -195,7 +198,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>更新</string>
+    <string>修改工人</string>
    </property>
   </widget>
   <widget class="QLabel" name="card_2">
@@ -540,6 +543,19 @@
     <rect>
      <x>890</x>
      <y>290</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="worker_id">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>360</y>
      <width>113</width>
      <height>21</height>
     </rect>

@@ -63,8 +63,54 @@ void TcpSocket::readData()
     qDebug()<<"auto data is "<<data;
     qDebug()<<"byte data is "<<bytedata;
     QByteArrayList datalist = bytedata.split(',');
-    qDebug()<<"di san duan is "<<datalist[2].toHex().data();
+
     QStringList list=card_we.split(',');
+
+    //new
+    //work_num,weight1,kind,weight2,time
+
+    qDebug()<<"di san duan is "<<datalist[0];
+    qDebug()<<"di san duan is "<<datalist[1];
+    qDebug()<<"di san duan is "<<datalist[2];
+    qDebug()<<"di san duan is "<<datalist[3];
+    qDebug()<<"di san duan is "<<datalist[4];
+
+    QString worker_name;
+    QString weight1,weight2;
+    QString kind;
+    weight1 = datalist[1];
+    weight2 = datalist[3];
+    float w1 =weight1.toFloat();
+    float w2 = weight2.toFloat();
+    w1=w1/100;
+    w2=w2/100;
+    if(sqlite->get_worker_name(datalist[0],worker_name)==false)
+    {
+        send_data="1";
+        this->write(send_data.toLatin1());
+        return;
+    }
+    sqlite->get_kind(datalist[2],kind);
+
+    weight1 = QString("%1").arg(w1);
+    weight2 = QString("%1").arg(w2);
+
+    if(sqlite->add_weight_3(worker_name,kind,weight1,weight2,datalist[4]))
+    {
+        send_data="0";
+        this->write(send_data.toLatin1());
+        return;
+    }
+    else
+    {
+        send_data="1";
+        this->write(send_data.toLatin1());
+        return;
+    }
+
+
+
+   /*
 
     send_data="n,";
     send_data.append(QString::number(this_kindid,10));
@@ -94,10 +140,7 @@ void TcpSocket::readData()
         this->write(send_data.toLatin1());//
         return;
     }
-   /* if(this_kind.isEmpty())
-    {
-        this_kind = "测试";
-    }*/
+
 
 
     flag=list[0];

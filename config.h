@@ -42,6 +42,8 @@
  * id int,name(vchar) not null,kind (vchar),weight1 (vchar),time1 (vchar),
  * weight2 (vchar),time2 (vchar),percent (vchar),date (vchar)
  *
+ * list2
+ * id int primary key not null,name vchar,kind vchar,weight1 vchar,weight2 vchar,time vchar
  *
  * kind
  * id int,name vchar ,price vchar
