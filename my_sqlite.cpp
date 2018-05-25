@@ -129,8 +129,8 @@ bool My_Sqlite::add_weight_3(QString worker_name, QString kind, QString weight1,
         query->prepare("insert into list_date (id,name,num1,num2,date,kind) values (:list_id,:worker_name,:list_num1,:list_num2,:list_date,:kind_now)");
         query->bindValue(":list_id",write_date_id);
         query->bindValue(":worker_name",worker_name);
-        query->bindValue(":list_num1",0);
-        query->bindValue(":list_num2",0);
+        query->bindValue(":list_num1",1);
+        query->bindValue(":list_num2",1);
         query->bindValue(":list_date",write_date);
         query->bindValue(":kind_now",kind);
         query->exec();
