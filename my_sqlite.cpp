@@ -69,6 +69,94 @@ bool My_Sqlite::test_add(QString test)
     return true;
 }
 
+bool My_Sqlite::add_weight_4(QString worker_name, QString kind, QString weight, QString time2)
+{
+    int id;
+    int num1=0;
+    unsigned int write_date_id =0;
+    float list_weight1=weight.toFloat();
+    write_time = time.currentDateTime().toString("hh:mm:ss");
+    write_date = time.currentDateTime().toString("yyyy.MM.dd");
+    query->exec("select max(id) from list");
+    while(query->next())
+    {
+        id = query->value(0).toInt()+1;
+    }
+    query->prepare("insert into list (id,name,kind,weight1,time1,date) values(:list_id,:worker_name,:list_kind,:list_weight1,:list_time1,:write_date)");
+    query->bindValue(":list_id",QString::number(id,10));
+    query->bindValue(":worker_name",worker_name);
+    query->bindValue(":list_kind",kind);
+    query->bindValue(":list_weight1",weight);
+    query->bindValue(":list_time1",time2);
+    query->bindValue(":write_date",write_date);
+    query->exec();
+    qDebug()<<"mysqllite98" <<query->lastError();
+    if(!query->isActive())
+    {
+        return false;
+    }
+
+    query->prepare("select * from list_date where name=:worker_name and date=:write_date and kind=:kind_now");
+    query->bindValue(":worker_name",worker_name);
+    query->bindValue(":write_date",write_date);
+    query->bindValue(":kind_now",kind);
+    query->exec();
+    qDebug()<<"mysqllite113" <<query->lastError();
+    if(!query->isActive())
+    {
+        return false;
+    }
+    while(query->next())
+    {
+        write_date_id=query->value(0).toInt();
+        num1=query->value(3).toInt()+1;
+    }
+
+    if (0 == write_date_id)
+    {
+        //添加该工人当天的行
+
+        query->exec("select max(id) from list_date");
+        while(query->next())
+        {
+            write_date_id = query->value(0).toInt()+1;
+        }
+        query->prepare("insert into list_date (id,name,num1,date,kind) values (:list_id,:worker_name,:list_num1,:list_date,:kind_now)");
+        query->bindValue(":list_id",write_date_id);
+        query->bindValue(":worker_name",worker_name);
+        query->bindValue(":list_num1",1);
+        query->bindValue(":list_date",write_date);
+        query->bindValue(":kind_now",kind);
+        query->exec();
+        qDebug()<<"mysqllite142" <<query->lastError();
+        if(!query->isActive())
+        {
+            return false;
+        }
+        qDebug()<<query->lastError();
+    }
+    query->prepare("select * from list_date where id=:list_id");
+    query->bindValue(":list_id",write_date_id);
+    query->exec();
+    while(query->next())
+    {
+        qDebug()<<list_weight1;
+        qDebug()<<query->value(2).toString();
+        list_weight1=list_weight1+query->value(2).toFloat();
+        qDebug()<<list_weight1;
+    }
+    weight=QString("%1").arg(list_weight1);
+    query->prepare("update list_date set weight1=:weight1,num1=:list_num1 where id=:list_id");
+    query->bindValue(":weight1",weight);
+    query->bindValue(":list_num1",num1);
+    query->bindValue(":list_id",write_date_id);
+    query->exec();
+    qDebug()<<"mysqllite168" <<query->lastError();
+
+    return true;
+}
+
+
 bool My_Sqlite::add_weight_3(QString worker_name, QString kind, QString weight1, QString weight2, QString time2)
 {
     write_time = time.currentDateTime().toString("hh:mm:ss");
@@ -120,6 +208,8 @@ bool My_Sqlite::add_weight_3(QString worker_name, QString kind, QString weight1,
     if (0 == write_date_id)
     {
         //添加该工人当天的行
+        num1=1;
+        num2=1;
 
         query->exec("select max(id) from list_date");
         while(query->next())
@@ -129,8 +219,8 @@ bool My_Sqlite::add_weight_3(QString worker_name, QString kind, QString weight1,
         query->prepare("insert into list_date (id,name,num1,num2,date,kind) values (:list_id,:worker_name,:list_num1,:list_num2,:list_date,:kind_now)");
         query->bindValue(":list_id",write_date_id);
         query->bindValue(":worker_name",worker_name);
-        query->bindValue(":list_num1",1);
-        query->bindValue(":list_num2",1);
+        query->bindValue(":list_num1",0);
+        query->bindValue(":list_num2",0);
         query->bindValue(":list_date",write_date);
         query->bindValue(":kind_now",kind);
         query->exec();

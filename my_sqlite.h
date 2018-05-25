@@ -22,7 +22,8 @@ public:
     bool check_card(QString worker_name,QString card1);
     bool add_weight_1(QString worker_name,QString kind,QString weight);//新加一条，再写入毛料重量,时间
     bool add_weight_2(QString worker_name,QString weight);//成品重量加时间.id用来在list中检索
-    bool add_weight_3(QString worker_name,QString kind,QString weight1,QString weight2,QString time2);
+    bool add_weight_3(QString worker_name,QString kind,QString weight1,QString weight2,QString time2);//写卡的版本
+    bool add_weight_4(QString worker_name,QString kind,QString weight,QString time);//单独统计
     bool search_from_kind(QString &kind,int &kindid,QString cardid);
     bool get_kind(QString kind_id,QString &kind);
     bool add_date();
